@@ -1,4 +1,3 @@
-// import { getImages } from "./js/getImages";
 import { NewsApiService } from "./js/newsService"
 import { getRefs } from "./js/getRefs";
 import { generateMarkup } from "./js/galleryMarkup";
@@ -24,12 +23,12 @@ async function onSubmit(evt) {
         refs.btnLoadMore.classList.add('is-hidden');
 
         const response = await newsApiService.getSearchQuery();
-        console.log(response);
 
         if (response.totalHits === 0) {
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
             return;
         } 
+
         Notify.success(`Hooray! We found ${response.totalHits} images.`);
         appendGalleryMarkup(response);
         refs.btnLoadMore.classList.remove('is-hidden');
@@ -42,6 +41,7 @@ async function onLoadMore() {
     try {
         const response = await newsApiService.getSearchQuery();
         appendGalleryMarkup(response);
+        smoothScrolling();
     } catch (error) {
         Notify.info("We're sorry, but you've reached the end of search results.");
         refs.btnLoadMore.classList.add('is-hidden');
@@ -57,40 +57,16 @@ function clearGalleryMarkup() {
     refs.galleryEl.innerHTML = '';
 }
 
-// async function renderGalleryMarkup() {
-//     try {
-//         const response = await newsApiService.getSearchQuery();
-//         const markup = addGalleryMarkup(response);
+function smoothScrolling() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
 
-//         refs.galleryEl.insertAdjacentHTML("beforeend", markup);
-//         lightbox.refresh();
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
-// ********
-// refs.formEl.addEventListener('submit', handleSubmit);
-// refs.btnLoadMore.addEventListener('click', onLoadMore);
-
-// function handleSubmit(evt) {
-//     evt.preventDefault();
-//     const searchQuery = evt.currentTarget.elements.searchQuery.value;
-//     return renderGalleryMarkup(searchQuery);
-// }
-
-// function onLoadMore() {
-//     console.log('hi');
-// }
-
-// async function renderGalleryMarkup(query) {
-//     const response = await getImages(query);
-//     const markup = addGalleryMarkup(response);
-
-//     refs.galleryEl.insertAdjacentHTML("beforeend", markup);
-//     lightbox.refresh();
-// }
-// ********
+    window.scrollBy({
+    top: cardHeight * 2,
+    behavior: "smooth",
+    });
+}
 
 
 
