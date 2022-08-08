@@ -1,5 +1,5 @@
-export function addGalleryMarkup(item) {
-    return item.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
+export function generateMarkup({ hits }) {
+    return hits.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
         return `<div class="photo-card">
                     <a class="photo-link" href="${largeImageURL}">
                         <img src="${webformatURL}" alt="${tags}" loading="lazy" />
