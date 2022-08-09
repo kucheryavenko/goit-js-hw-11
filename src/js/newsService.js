@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 export class NewsApiService {
   
@@ -9,17 +9,17 @@ export class NewsApiService {
       image_type: "photo",
       orientation: "horizontal",
       safesearch: "true",
-      per_page: 40,
     })
   
   constructor() {
     this.searchQuery = '';
     this.page = 1;
+    this.per_page = 40;
   }
 
   async getSearchQuery() {
     try {
-        const url = `${this.#BASE_URL}?key=${this.#KEY_API}&q=${this.searchQuery}&${this.#searchParams}&page=${this.page}`;
+        const url = `${this.#BASE_URL}?key=${this.#KEY_API}&q=${this.searchQuery}&${this.#searchParams}&page=${this.page}&per_page=${this.per_page}`;
         this.page += 1;  
         const response = await axios.get(url);
         return response.data;

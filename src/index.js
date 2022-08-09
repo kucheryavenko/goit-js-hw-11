@@ -20,18 +20,22 @@ async function onSubmit(evt) {
     newsApiService.query = evt.currentTarget.elements.searchQuery.value;
     newsApiService.resetPage();
     try {
-        refs.btnLoadMore.classList.add('is-hidden');
-
+        
         const response = await newsApiService.getSearchQuery();
 
         if (response.totalHits === 0) {
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
             return;
-        } 
+        } else if (response.totalHits < newsApiService.per_page) {
+            Notify.success(`Hooray! We found ${response.totalHits} images.`);
+            appendGalleryMarkup(response);
+            refs.btnLoadMore.classList.add('is-hidden');
+        } else {
+            Notify.success(`Hooray! We found ${response.totalHits} images.`);
+            appendGalleryMarkup(response);
+            refs.btnLoadMore.classList.remove('is-hidden');
+        }
 
-        Notify.success(`Hooray! We found ${response.totalHits} images.`);
-        appendGalleryMarkup(response);
-        refs.btnLoadMore.classList.remove('is-hidden');
     } catch (error) {
         console.log(error);
     }
